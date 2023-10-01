@@ -1,0 +1,36 @@
+.blog {
+  border-radius: 2px;
+  border-color: aliceblue;
+  border-style: double;
+  width: 100%;
+}
+.container {
+  max-width: 20rem;
+  width: 100%;
+  margin: 0 auto;
+}
+.hero-social-links .hero-social-link {
+  color: white;
+}
+.hero-social-link:first-child {
+  margin-right: 2rem;
+}
+.hero-title {
+  font-size: 3rem;
+}
+.hero {
+  text-align: center;
+  margin: 6rem 0;
+}
+.blog-date {
+  text-align: right;
+}
+a {
+  /* color: #123f80; */
+  color: #4d6196;
+  text-decoration: none;
+}
+body {
+  background-color: rgb(21 32 43);
+  color: white;
+}
