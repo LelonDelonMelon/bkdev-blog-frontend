@@ -1,19 +1,24 @@
 .blog {
   border-radius: 2px;
-  border-color: aliceblue;
-  border-style: double;
   width: 100%;
+  margin-bottom : 1em;
 }
 .container {
-  max-width: 20rem;
+  max-width: 40rem;
   width: 100%;
   margin: 0 auto;
 }
 .hero-social-links .hero-social-link {
   color: white;
 }
+.hero-social-links .hero-social-link:hover {
+  color: red;
+}
 .hero-social-link:first-child {
   margin-right: 2rem;
+}
+.hero-social-links a {
+    margin-right: 2rem;
 }
 .hero-title {
   font-size: 3rem;
