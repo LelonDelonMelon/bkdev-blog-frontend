@@ -1,7 +1,7 @@
 .blog {
   border-radius: 2px;
   width: 100%;
-  margin-bottom : 1em;
+  margin-bottom: 1em;
 }
 .container {
   max-width: 40rem;
@@ -18,7 +18,7 @@
   margin-right: 2rem;
 }
 .hero-social-links a {
-    margin-right: 2rem;
+  margin-right: 2rem;
 }
 .hero-title {
   font-size: 3rem;
@@ -38,4 +38,66 @@ a {
 body {
   background-color: rgb(21 32 43);
   color: white;
+}
+
+/* Styles for adminPanel component */
+.navbar-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.navbar {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  text-align: center;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.centered-form {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.info {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+/* Style textarea specifically */
+textarea.input-field {
+  resize: vertical;
+  min-height: 100px; /* Adjust the minimum height as needed */
+}
+
+/* Style the submit button if needed */
+.submit-button {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Style the submit button on hover */
+.submit-button:hover {
+  background-color: #0056b3;
 }
