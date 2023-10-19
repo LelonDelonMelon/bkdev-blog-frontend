@@ -1,20 +1,30 @@
-import { ChangeEvent, FormEventHandler, useState } from "react";
+import { useState } from "react";
 import './admin.css'
 
-function adminPanel() {
+
+/*
+interface IFile {
+    url: string;
+    name: string;
+}
+*/
+
+const AdminPanel: React.FC = () => {
     const [isFileUploadOpen, setIsFileUploadOpen] = useState(false);
-    //const [uploadedFile, setUploadedFile] = useState();
+    const [currentFile, setCurrentFile] = useState<File>();
+    // const [progress, setProgress] = useState<number>(0);
+    // const [fileInfo, setFileInfo] = useState<Array<IFile>>([]);
 
-    const handleFileOnChange = (e: any) => {
-        const selectedFile = e.target.files?.[0]; // Check for null
-        console.log("Selected File: ", selectedFile?.name);
 
-        if (selectedFile) {
+    const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 
-            console.log("File exists");
-        }
-        setIsFileUploadOpen(!isFileUploadOpen);
-    };
+        const { files } = event.target;
+        const selectedFiles = files as FileList;
+        setCurrentFile(selectedFiles?.[0]);
+        console.log("Current file : ", currentFile);
+        //   setProgress(0);
+    }
+
 
 
     return (
@@ -35,10 +45,13 @@ function adminPanel() {
                             />
                             <span className="info">Post details </span>
                             <textarea placeholder="lipsum..." className="input-field" />
-                            <button className="upload-button" onClick={(e) => {
+                            <button className="upload-button" 
+onChange={(e:React.ChangeEvent<HTMLInputElement>)=> {
+                                    selectFile(e);
+                                }} onClick={(e) => {
                                 e.preventDefault();
                                 setIsFileUploadOpen(!isFileUploadOpen)
-                            }} onChange={handleFileOnChange}>Or upload files: </button>
+                            }} >Or upload files: </button>
 
                             {isFileUploadOpen &&
 
@@ -56,9 +69,9 @@ function adminPanel() {
                         <button type="submit"> Submit </button>
                     </form>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
 
-export default adminPanel;
+export default AdminPanel;

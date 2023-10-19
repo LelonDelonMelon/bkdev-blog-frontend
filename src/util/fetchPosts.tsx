@@ -1,13 +1,22 @@
-const fetchPosts = () => {
-    const data = {
-        a: "asdjbgds",
-        b: "asdbhasbd",
-        c: "ajsbndhjbdfg"
+import axios from "axios";
+import PostData from "../types/Post";
+
+const fetchPosts = async (): Promise<PostData[]> => {
+
+    try {
+
+        const response = await axios.get("http://localhost:3000/post")
+        console.log("Res", response);
+        const posts = response.data as PostData[];
+        return posts
     }
-    return (
-        data
-    );
+
+    catch (e) {
+
+        console.log("Error occurred", e);
+        throw e;
+    }
+    return null;
 
 }
-
 export default fetchPosts;
