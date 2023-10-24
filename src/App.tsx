@@ -3,6 +3,7 @@ import Post from "./components/post";
 import fetchPosts from "./util/fetchPosts";
 import { useEffect, useState } from "react";
 import PostData from "./types/Post";
+
 function App() {
 
 
@@ -30,6 +31,7 @@ function App() {
     }, []);
     return (
         <div className="container">
+            <a href="/login">Log in</a>
             <div className="hero">
                 <h1 className="hero-title">Burak Katı</h1>
                 <div className="hero-social-links">

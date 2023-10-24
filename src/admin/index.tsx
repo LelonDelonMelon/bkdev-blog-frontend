@@ -1,20 +1,11 @@
 import { useState } from "react";
 import './admin.css'
 
-
-/*
-interface IFile {
-    url: string;
-    name: string;
-}
-*/
-
 const AdminPanel: React.FC = () => {
     const [isFileUploadOpen, setIsFileUploadOpen] = useState(false);
     const [currentFile, setCurrentFile] = useState<File>();
     // const [progress, setProgress] = useState<number>(0);
     // const [fileInfo, setFileInfo] = useState<Array<IFile>>([]);
-
 
     const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
 
@@ -45,13 +36,13 @@ const AdminPanel: React.FC = () => {
                             />
                             <span className="info">Post details </span>
                             <textarea placeholder="lipsum..." className="input-field" />
-                            <button className="upload-button" 
-onChange={(e:React.ChangeEvent<HTMLInputElement>)=> {
+                            <button className="upload-button"
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     selectFile(e);
                                 }} onClick={(e) => {
-                                e.preventDefault();
-                                setIsFileUploadOpen(!isFileUploadOpen)
-                            }} >Or upload files: </button>
+                                    e.preventDefault();
+                                    setIsFileUploadOpen(!isFileUploadOpen)
+                                }} >Or upload files: </button>
 
                             {isFileUploadOpen &&
 

@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import AdminPanel from './admin/index.tsx';
+import Login from './components/Login.tsx';
 import {
     createBrowserRouter,
     RouterProvider,
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
         path: "/admin",
         element: <AdminPanel></AdminPanel>,
     },
+    {
+        path: "login",
+        element: <Login></Login>,
+    }
 ])
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
