@@ -24,18 +24,17 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3000/auth/login', {
+            const response = await fetch('http://localhost:3000/users/new', {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('jwtToken')}`,
-
                 },
                 body: JSON.stringify(formData)
             });
 
             if (response.ok) {
                 const token = await response.text();
+                console.log(token, "token success");
                 localStorage.setItem('jwtToken', token);
 
                 setIsUserLoggedIn(true)
@@ -43,7 +42,7 @@ export default function Login() {
             else {
 
 
-
+                console.log(response.text(), "failed");
                 setIsUserLoggedIn(false);
             }
         }
@@ -57,12 +56,12 @@ export default function Login() {
             {!isUserLoggedIn && <>
 
 
-                <h1 className="welcome-back-text">Welcome Back Admin!</h1>
+                <h1 className="welcome-back-text">Sign up</h1>
                 <form method="post" >
                     <div className="login-box">
                         <div className="login-username">
-                            <span>Username</span>
-                            <input type="text" name="email" onChange={handleInputChange} value={formData.email} placeholder="Username" />
+                            <span>Email</span>
+                            <input type="text" name="email" onChange={handleInputChange} value={formData.email} placeholder="Email" />
 
                         </div>
                         <div className="login-password">
@@ -78,4 +77,5 @@ export default function Login() {
         </>
     )
 }
+
 

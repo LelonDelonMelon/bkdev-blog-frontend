@@ -12,7 +12,7 @@
   color: white;
 }
 .hero-social-links .hero-social-link:hover {
-  color: red;
+  color: darkkhaki;
 }
 .hero-social-link:first-child {
   margin-right: 2rem;
@@ -100,4 +100,21 @@ textarea.input-field {
 /* Style the submit button on hover */
 .submit-button:hover {
   background-color: #0056b3;
+}
+
+.login-link {
+    margin-right: 2rem;
+    color:whitesmoke;
+}
+.signup-link {
+    color:whitesmoke;
+}
+.login-link:hover{
+    color:darkkhaki;
+}
+.bk:hover {
+    color:darkkhaki;
+}
+.signup-link:hover{
+    color:darkkhaki;
 }

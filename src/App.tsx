@@ -31,9 +31,11 @@ function App() {
     }, []);
     return (
         <div className="container">
-            <a href="/login">Log in</a>
+            <a className="login-link" href="/login">Log in</a>
+            <a className="signup-link" href="/signup"> Sign Up </a>
             <div className="hero">
-                <h1 className="hero-title">Burak Katı</h1>
+                <a className="hero-social-link" href="https://www.burakkati.dev/" target="_blank"> <h1 className="hero-title bk">Burak Katı</h1></a>
+
                 <div className="hero-social-links">
 
                     <a className="hero-social-link"
