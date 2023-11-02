@@ -26,7 +26,7 @@ const AdminPanel: React.FC = () => {
 
             <div className="content">
                 <div className="centered-form">
-                    <form action="">
+                    <form action="post">
                         <div className="form-group">
                             <span className="info">Post title</span>
                             <input
