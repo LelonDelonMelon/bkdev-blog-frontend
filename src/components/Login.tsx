@@ -34,7 +34,6 @@ export default function Login() {
       if (response.ok) {
         const token = await response.text();
         localStorage.setItem("jwtToken", token);
-
         setIsUserLoggedIn(true);
       } else {
         setIsUserLoggedIn(false);
@@ -48,7 +47,7 @@ export default function Login() {
     <>
       {!isUserLoggedIn && (
         <>
-          <h1 className="welcome-back-text">Welcome Back Admin!</h1>
+          <h1 className="welcome-back-text">Login</h1>
           <form method="POST">
             <div className="login-box">
               <div className="login-username">

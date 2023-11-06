@@ -14,12 +14,34 @@ const AdminPanel: React.FC = () => {
     console.log("Current file : ", currentFile);
     //   setProgress(0);
   };
+  const handleSignOut = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
 
+    const token = localStorage.getItem("jwtToken");
+    console.log("Token from localStorage:", token);
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/signout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer $(token)}`,
+        },
+        body: JSON.stringify({ token }),
+      });
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="navbar-container">
       <div className="navbar">
         <a href="/">Back to the blog</a>
-        <a href="/login"> Sign out</a>
+        <a href="/login" onClick={handleSignOut}>
+          {" "}
+          Sign out
+        </a>
       </div>
 
       <div className="content">
@@ -36,9 +58,6 @@ const AdminPanel: React.FC = () => {
               <textarea placeholder="lipsum..." className="input-field" />
               <button
                 className="upload-button"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  selectFile(e);
-                }}
                 onClick={(e) => {
                   e.preventDefault();
                   setIsFileUploadOpen(!isFileUploadOpen);
@@ -54,6 +73,9 @@ const AdminPanel: React.FC = () => {
                     type="file"
                     placeholder="Or upload files"
                     className="input-field"
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      selectFile(e);
+                    }}
                   />{" "}
                 </span>
               )}
