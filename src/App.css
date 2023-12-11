@@ -118,3 +118,13 @@ textarea.input-field {
 .signup-link:hover{
     color:darkkhaki;
 }
+.error-header {
+  color: red;
+}
+.error-p {
+  color:black;
+  text-align: center;
+}
+.error-modal-container {
+  background-color: #333;
+}

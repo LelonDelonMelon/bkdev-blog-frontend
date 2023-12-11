@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react";
+import { useState, ChangeEvent, useEffect } from "react";
 import AdminPanel from "../admin";
 
 export default function Login() {
@@ -7,6 +7,13 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    if (localStorage.getItem("isLoggedIn")) {
+      setIsUserLoggedIn(true);
+    } else setIsUserLoggedIn(false);
+  }, [isUserLoggedIn]);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -34,6 +41,7 @@ export default function Login() {
       if (response.ok) {
         const token = await response.text();
         localStorage.setItem("jwtToken", token);
+        localStorage.setItem("isLoggedIn", "true");
         setIsUserLoggedIn(true);
       } else {
         setIsUserLoggedIn(false);
@@ -63,7 +71,7 @@ export default function Login() {
               <div className="login-password">
                 <span>Password</span>
                 <input
-                  type="text"
+                  type="password"
                   name="password"
                   onChange={handleInputChange}
                   value={formData.password}

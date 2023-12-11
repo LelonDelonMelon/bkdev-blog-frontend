@@ -7,8 +7,21 @@ import PostData from "./types/Post";
 function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
+  const handleLogout = () => {
+    setIsUserLoggedIn(false);
+    localStorage.setItem("isLoggedIn", "false");
+    // call index.tsx's signout function
+
+    document.getElementsByClassName("login-link")[0].innerHTML = "Sign In";
+  };
   useEffect(() => {
+    if (localStorage.getItem("isLoggedIn") === "true") {
+      setIsUserLoggedIn(true);
+    } else {
+      setIsUserLoggedIn(false);
+    }
     const fetchData = async () => {
       try {
         const fetchedPosts = await fetchPosts();
@@ -22,12 +35,18 @@ function App() {
     };
 
     fetchData();
-  }, []);
+  }, [isUserLoggedIn]);
   return (
     <div className="container">
-      <a className="login-link" href="/login">
-        Log in
-      </a>
+      {!isUserLoggedIn ? (
+        <a className="login-link" href="/login">
+          Log in
+        </a>
+      ) : (
+        <a className="login-link" onClick={handleLogout} href="/">
+          Log out
+        </a>
+      )}
       <a className="signup-link" href="/signup">
         {" "}
         Sign Up{" "}
