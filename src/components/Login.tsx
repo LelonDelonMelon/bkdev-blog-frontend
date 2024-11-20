@@ -43,6 +43,7 @@ export default function Login() {
         localStorage.setItem("jwtToken", token);
         localStorage.setItem("isLoggedIn", "true");
         setIsUserLoggedIn(true);
+        window.location.href = "/";
       } else {
         setIsUserLoggedIn(false);
       }
@@ -53,7 +54,7 @@ export default function Login() {
 
   return (
     <>
-      {!isUserLoggedIn && (
+      {isUserLoggedIn && (
         <>
           <h1 className="welcome-back-text">Login</h1>
           <form method="POST">
@@ -89,7 +90,7 @@ export default function Login() {
           </form>
         </>
       )}
-      {isUserLoggedIn && <AdminPanel />}
+      {!isUserLoggedIn && <AdminPanel />}
     </>
   );
 }

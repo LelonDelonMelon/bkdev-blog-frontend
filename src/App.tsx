@@ -3,17 +3,20 @@ import Post from "./components/post";
 import fetchPosts from "./util/fetchPosts";
 import { useEffect, useState } from "react";
 import PostData from "./types/Post";
+import { handleSignOut } from "../src/util/auth";
 
 function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
+
+
+
   const handleLogout = () => {
+    handleSignOut();
     setIsUserLoggedIn(false);
     localStorage.setItem("isLoggedIn", "false");
-    // call index.tsx's signout function
-
     document.getElementsByClassName("login-link")[0].innerHTML = "Sign In";
   };
   useEffect(() => {
