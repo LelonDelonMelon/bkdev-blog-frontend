@@ -10,18 +10,27 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
-
-
-
   const handleLogout = () => {
     handleSignOut();
     setIsUserLoggedIn(false);
     localStorage.setItem("isLoggedIn", "false");
-    document.getElementsByClassName("login-link")[0].innerHTML = "Sign In";
   };
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") === "true") {
       setIsUserLoggedIn(true);
+      fetch("http://localhost:3000/users/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      }).then((response) => {
+        if (response.ok) {
+          console.log("response from validation", response);
+        } else {
+          console.log("response from validation", response);
+        }
+      });
     } else {
       setIsUserLoggedIn(false);
     }
@@ -39,6 +48,7 @@ function App() {
 
     fetchData();
   }, [isUserLoggedIn]);
+  console.log(isUserLoggedIn);
   return (
     <div className="container">
       {!isUserLoggedIn ? (
@@ -46,13 +56,15 @@ function App() {
           Log in
         </a>
       ) : (
-        <a className="login-link" onClick={handleLogout} href="/">
-          Log out
-        </a>
+        <div>
+          <a className="login-link" onClick={handleLogout} href="/">
+            Log out Signed in as {localStorage.getItem("jwtToken")}
+          </a>
+          <a href="/admin">Go to Panel</a>
+        </div>
       )}
       <a className="signup-link" href="/signup">
-        {" "}
-        Sign Up{" "}
+        Sign Up
       </a>
       <div className="hero">
         <a

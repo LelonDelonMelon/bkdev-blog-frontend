@@ -1,5 +1,4 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import AdminPanel from "../admin";
 
 export default function Login() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -90,7 +89,6 @@ export default function Login() {
           </form>
         </>
       )}
-      {!isUserLoggedIn && <AdminPanel />}
     </>
   );
 }
