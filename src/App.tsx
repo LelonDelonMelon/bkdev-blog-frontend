@@ -9,7 +9,6 @@ function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-
   const handleLogout = () => {
     handleSignOut();
     setIsUserLoggedIn(false);
@@ -26,7 +25,12 @@ function App() {
         },
       }).then((response) => {
         if (response.ok) {
-          console.log("response from validation", response);
+          response.json().then((data) => {
+            console.log("response from val", data);
+
+            localStorage.setItem("userData", data);
+          });
+          //console.log("response from validation", response);
         } else {
           console.log("response from validation", response);
         }
@@ -48,7 +52,7 @@ function App() {
 
     fetchData();
   }, [isUserLoggedIn]);
-  console.log(isUserLoggedIn);
+  console.log(" isUserLoggedIn", isUserLoggedIn);
   return (
     <div className="container">
       {!isUserLoggedIn ? (
@@ -57,10 +61,14 @@ function App() {
         </a>
       ) : (
         <div>
-          <WelcomeModal />;
+          <WelcomeModal />
           <a className="login-link" onClick={handleLogout} href="/">
-            Log out Signed in as {localStorage.getItem("jwtToken")}
+            Log out
           </a>
+          <label className="signed-in-user" htmlFor="user">
+            Signed in as
+            {" " + (localStorage.getItem("userData") || "{}") + " "}
+          </label>
           <a href="/admin">Go to Panel</a>
         </div>
       )}

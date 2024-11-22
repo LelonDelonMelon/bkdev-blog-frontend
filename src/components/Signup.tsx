@@ -1,5 +1,4 @@
 import { useState, ChangeEvent } from "react";
-import AdminPanel from "../admin";
 import ErrorModal from "./Error";
 
 export default function Login() {
@@ -94,11 +93,11 @@ export default function Login() {
               >
                 SignUp
               </button>
+              <a href="/login"> Already have an account? Login here </a>
             </div>
           </form>
         </>
       )}
-      {isUserLoggedIn && <AdminPanel />}
 
       <ErrorModal
         isOpen={isErrorModalOpen}

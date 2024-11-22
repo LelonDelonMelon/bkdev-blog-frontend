@@ -5,15 +5,21 @@ const WelcomeModal = () => {
 
   useEffect(() => {
     // Open the modal when the component mounts
-    setIsOpen(true);
+    if (localStorage.getItem("gotWelcomed") !== "true") {
+      setIsOpen(true);
+    }
 
     // Automatically close the modal after 3 seconds
     const timeoutId = setTimeout(() => {
       setIsOpen(false);
+      localStorage.setItem("gotWelcomed", "true");
     }, 3000);
 
-    // Clear the timeout if the component unmounts
-    return () => clearTimeout(timeoutId);
+    // Reset the gotWelcomed state and clear the timeout if the component unmounts
+    return () => {
+      clearTimeout(timeoutId);
+      localStorage.removeItem("gotWelcomed");
+    };
   }, []);
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {

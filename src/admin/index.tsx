@@ -25,7 +25,7 @@ const AdminPanel: React.FC = () => {
   const setPostOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setPostDetails({ ...postDetails, [e.target.name]: e.target.value });
-    console.log(postDetails);
+    // console.log(postDetails);
   };
 
   const setTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -63,7 +63,6 @@ const AdminPanel: React.FC = () => {
     }
   };
 
- 
   return (
     <div className="navbar-container">
       <div className="navbar">
