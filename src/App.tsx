@@ -4,7 +4,7 @@ import fetchPosts from "./util/fetchPosts";
 import { useEffect, useState } from "react";
 import PostData from "./types/Post";
 import { handleSignOut } from "../src/util/auth";
-
+import WelcomeModal from "./components/WelcomeModal";
 function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
@@ -57,6 +57,7 @@ function App() {
         </a>
       ) : (
         <div>
+          <WelcomeModal />;
           <a className="login-link" onClick={handleLogout} href="/">
             Log out Signed in as {localStorage.getItem("jwtToken")}
           </a>

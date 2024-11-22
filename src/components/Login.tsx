@@ -1,4 +1,5 @@
 import { useState, ChangeEvent, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Use React Router for navigation
 
 export default function Login() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -6,12 +7,14 @@ export default function Login() {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
-    if (localStorage.getItem("isLoggedIn")) {
-      setIsUserLoggedIn(true);
-    } else setIsUserLoggedIn(false);
-  }, [isUserLoggedIn]);
+    // Check localStorage only on mount
+    const loggedIn = localStorage.getItem("isLoggedIn") === "true";
+    setIsUserLoggedIn(loggedIn);
+  }, []);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -23,16 +26,16 @@ export default function Login() {
 
   const handleOnClickLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setError(""); // Clear any previous errors
 
     const token = localStorage.getItem("jwtToken");
-    console.log("Token from localStorage:", token);
 
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer $(token)}`,
+          Authorization: `Bearer ${token}`, // Corrected token usage
         },
         body: JSON.stringify(formData),
       });
@@ -42,30 +45,43 @@ export default function Login() {
         localStorage.setItem("jwtToken", token);
         localStorage.setItem("isLoggedIn", "true");
         setIsUserLoggedIn(true);
-        window.location.href = "/";
+
+        // Delay the navigation to "/" for 3 seconds
+        navigate("/");
       } else {
+        const errorMsg = await response.text();
+        setError(errorMsg || "Invalid login credentials.");
         setIsUserLoggedIn(false);
       }
     } catch (err) {
-      console.log(err);
+      console.error("Login failed:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <>
-      {isUserLoggedIn && (
+    <div className="login-container">
+      {isUserLoggedIn ? (
+        <>
+          {/* Keep the login form hidden but mounted during modal display */}
+          <div style={{ display: "none" }}>
+            <h1 className="welcome-back-text">Login</h1>
+          </div>
+        </>
+      ) : (
         <>
           <h1 className="welcome-back-text">Login</h1>
           <form method="POST">
             <div className="login-box">
+              {error && <p className="error-text">{error}</p>}
               <div className="login-username">
-                <span>Username</span>
+                <span>Email</span>
                 <input
-                  type="text"
+                  type="email"
                   name="email"
                   onChange={handleInputChange}
                   value={formData.email}
-                  placeholder="Username"
+                  placeholder="Email"
                 />
               </div>
               <div className="login-password">
@@ -89,6 +105,6 @@ export default function Login() {
           </form>
         </>
       )}
-    </>
+    </div>
   );
 }
