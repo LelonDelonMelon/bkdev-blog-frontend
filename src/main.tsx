@@ -4,23 +4,28 @@ import Login from "./components/Login.tsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Signup from "./components/Signup.tsx";
 import AdminPanel from "./admin/index.tsx";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
   },
-
   {
     path: "login",
-    element: <Login></Login>,
+    element: <Login />,
   },
   {
     path: "signup",
-    element: <Signup></Signup>,
+    element: <Signup />,
   },
   {
     path: "admin",
-    element: <AdminPanel></AdminPanel>,
+    element: (
+      <ProtectedRoute>
+        <AdminPanel />
+      </ProtectedRoute>
+    ),
   },
 ]);
 

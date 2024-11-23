@@ -1,5 +1,6 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Use React Router for navigation
+import { useNavigate, Link } from "react-router-dom";
+import "../styles/Login.css";
 
 export default function Login() {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -8,13 +9,15 @@ export default function Login() {
     password: "",
   });
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Initialize navigate function
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Check localStorage only on mount
     const loggedIn = localStorage.getItem("isLoggedIn") === "true";
     setIsUserLoggedIn(loggedIn);
-  }, []);
+    if (loggedIn) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -26,16 +29,13 @@ export default function Login() {
 
   const handleOnClickLogin = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setError(""); // Clear any previous errors
-
-    const token = localStorage.getItem("jwtToken");
+    setError("");
 
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Corrected token usage
         },
         body: JSON.stringify(formData),
       });
@@ -44,9 +44,11 @@ export default function Login() {
         const token = await response.text();
         localStorage.setItem("jwtToken", token);
         localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem(
+          "userData",
+          JSON.stringify({ email: formData.email })
+        );
         setIsUserLoggedIn(true);
-
-        // Delay the navigation to "/" for 3 seconds
         navigate("/");
       } else {
         const errorMsg = await response.text();
@@ -59,52 +61,55 @@ export default function Login() {
     }
   };
 
+  if (isUserLoggedIn) {
+    return null;
+  }
+
   return (
     <div className="login-container">
-      {isUserLoggedIn ? (
-        <>
-          {/* Keep the login form hidden but mounted during modal display */}
-          <div style={{ display: "none" }}>
-            <h1 className="welcome-back-text">Login</h1>
+      <h1 className="welcome-back-text">Welcome Back</h1>
+      <form method="POST">
+        <div className="login-box">
+          {error && <p className="error-text">{error}</p>}
+          <div className="form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              onChange={handleInputChange}
+              value={formData.email}
+              placeholder="Enter your email"
+              autoComplete="email"
+            />
           </div>
-        </>
-      ) : (
-        <>
-          <h1 className="welcome-back-text">Login</h1>
-          <form method="POST">
-            <div className="login-box">
-              {error && <p className="error-text">{error}</p>}
-              <div className="login-username">
-                <span>Email</span>
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleInputChange}
-                  value={formData.email}
-                  placeholder="Email"
-                />
-              </div>
-              <div className="login-password">
-                <span>Password</span>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleInputChange}
-                  value={formData.password}
-                  placeholder="Password"
-                />
-              </div>
-              <button
-                type="submit"
-                className="login-button"
-                onClick={handleOnClickLogin}
-              >
-                Login
-              </button>
-            </div>
-          </form>
-        </>
-      )}
+          <div className="form-group">
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              onChange={handleInputChange}
+              value={formData.password}
+              placeholder="Enter your password"
+              autoComplete="current-password"
+            />
+          </div>
+          <button
+            type="submit"
+            className="login-button"
+            onClick={handleOnClickLogin}
+          >
+            Sign In
+          </button>
+        </div>
+      </form>
+      <p className="signup-prompt">
+        Don't have an account?
+        <Link to="/signup" className="signup-link">
+          Sign up
+        </Link>
+      </p>
     </div>
   );
 }

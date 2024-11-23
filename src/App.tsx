@@ -1,19 +1,28 @@
-import "./App.css";
+import { useEffect, useState } from "react";
+import UserDropdown from "./components/UserDropdown";
+import "./styles/shared.css";
+import "./styles/Blog.css";
+import "./styles/Modal.css";
+import "./styles/Navigation.css";
 import Post from "./components/post";
 import fetchPosts from "./util/fetchPosts";
-import { useEffect, useState } from "react";
 import PostData from "./types/Post";
 import { handleSignOut } from "../src/util/auth";
 import WelcomeModal from "./components/WelcomeModal";
+
 function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
   const handleLogout = () => {
     handleSignOut();
     setIsUserLoggedIn(false);
     localStorage.setItem("isLoggedIn", "false");
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("userData");
   };
+
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") === "true") {
       setIsUserLoggedIn(true);
@@ -23,36 +32,38 @@ function App() {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
-      }).then((response) => {
-        if (response.ok) {
-          response.json().then((data) => {
-            console.log("response from val", data);
-
-            localStorage.setItem("userData", data);
-          });
-          //console.log("response from validation", response);
-        } else {
-          console.log("response from validation", response);
-        }
-      });
+      })
+        .then((response) => {
+          if (response.ok) {
+            return response.json().then((data) => {
+              localStorage.setItem("userData", JSON.stringify(data));
+            });
+          } else {
+            // If the token is invalid, log the user out
+            handleLogout();
+          }
+        })
+        .catch(() => {
+          handleLogout();
+        });
     } else {
       setIsUserLoggedIn(false);
     }
+
     const fetchData = async () => {
       try {
         const fetchedPosts = await fetchPosts();
         setPosts(fetchedPosts);
-        console.log(fetchedPosts);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching posts:", error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
   }, [isUserLoggedIn]);
-  console.log(" isUserLoggedIn", isUserLoggedIn);
+
   return (
     <div className="container">
       {!isUserLoggedIn ? (
@@ -62,62 +73,42 @@ function App() {
       ) : (
         <div>
           <WelcomeModal />
-          <a className="login-link" onClick={handleLogout} href="/">
-            Log out
-          </a>
-          <label className="signed-in-user" htmlFor="user">
-            Signed in as
-            {" " + (localStorage.getItem("userData") || "{}") + " "}
-          </label>
-          <a href="/admin">Go to Panel</a>
+          <UserDropdown
+            email={JSON.parse(localStorage.getItem("userData") || "{}").email}
+            onLogout={handleLogout}
+          />
         </div>
       )}
-      <a className="signup-link" href="/signup">
-        Sign Up
-      </a>
-      <div className="hero">
-        <a
-          className="hero-social-link"
-          href="https://www.burakkati.dev/"
-          target="_blank"
-        >
-          {" "}
-          <h1 className="hero-title bk">Burak Katı</h1>
+      {localStorage.getItem("isLoggedIn") === "false" && (
+        <a className="signup-link" href="/signup">
+          Sign Up
         </a>
-
+      )}
+      <div className="hero">
+        <h1 className="hero-title">bk</h1>
         <div className="hero-social-links">
           <a
+            href="https://github.com/burakkaraceylan"
             className="hero-social-link"
-            href="https://burakkati.dev"
-            target="_blank"
           >
-            My Website
+            github
           </a>
           <a
+            href="https://www.linkedin.com/in/burak-karaceylan/"
             className="hero-social-link"
-            href="https://github.com/LelonDelonMelon"
-            target="_blank"
           >
-            Github
-          </a>
-          <a
-            className="hero-social-link"
-            href="https://www.linkedin.com/in/burakkati/"
-            target="_blank"
-          >
-            Linkedin
+            linkedin
           </a>
         </div>
       </div>
-
       {loading ? (
         <p>Loading...</p>
       ) : posts.length === 0 ? (
         <p>No posts available.</p>
       ) : (
-        posts.map((post, id) => (
+        posts.map((post) => (
           <Post
-            key={id}
+            key={post.id}
             postId={post.id}
             postTitle={post.title}
             postDetail={post.details}

@@ -1,0 +1,62 @@
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+.login-link,
+.signup-link {
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+  padding: 0.5rem;
+  white-space: nowrap;
+}
+
+.login-link:hover,
+.signup-link:hover,
+.bk:hover {
+  color: var(--hover-color);
+}
+
+.signed-in-user {
+  color: var(--text-color);
+  padding: 0.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+.signed-in-user:hover {
+  color: var(--hover-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .nav-links {
+    gap: 1rem;
+    justify-content: center;
+  }
+
+  .signed-in-user {
+    margin: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-links {
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .login-link,
+  .signup-link,
+  .signed-in-user {
+    font-size: 0.9rem;
+    padding: 0.4rem;
+  }
+}

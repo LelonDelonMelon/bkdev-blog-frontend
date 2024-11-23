@@ -1,23 +1,15 @@
 import { useState, ChangeEvent } from "react";
-import ErrorModal from "./Error";
+import { useNavigate, Link } from "react-router-dom";
+import "../styles/Signup.css";
 
-export default function Login() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [isErrorModalOpen, setIsErrorModalOpen] = useState<boolean>(false);
-
-  const handleOpenErrorModal = () => {
-    setIsErrorModalOpen(true);
-  };
-
-  const handleCloseErrorModal = () => {
-    setIsErrorModalOpen(false);
-  };
-
+export default function Signup() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -26,8 +18,9 @@ export default function Login() {
     });
   };
 
-  const handleOnClickSignup = async (e: MouseEvent) => {
+  const handleSignup = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    setError(null);
 
     try {
       const response = await fetch("http://localhost:3000/users/new", {
@@ -40,70 +33,77 @@ export default function Login() {
 
       if (response.ok) {
         const token = await response.text();
-        console.log(token, "token success");
         localStorage.setItem("jwtToken", token);
-        setError(null);
+        localStorage.setItem("isLoggedIn", "true");
+        
+        // Fetch user data immediately after signup
+        const userResponse = await fetch("http://localhost:3000/users/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        setIsUserLoggedIn(true);
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          localStorage.setItem("userData", JSON.stringify(userData));
+        }
+
+        navigate("/");
       } else {
-        const errorText = await response.json();
-        console.log(errorText.message, "failed");
-        setIsUserLoggedIn(false);
-        setError(errorText.message);
-        handleOpenErrorModal();
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to create account");
       }
-    } catch (err: any) {
-      console.log(err);
-      setError(err.message || "An error occurred");
-      handleOpenErrorModal();
+    } catch (err) {
+      console.error("Signup failed:", err);
+      setError("Something went wrong. Please try again.");
     }
   };
 
   return (
-    <>
-      {!isUserLoggedIn && (
-        <>
-          <h1 className="welcome-back-text">Sign up</h1>
-          <form method="post">
-            <div className="login-box">
-              <div className="login-username">
-                <span>Email</span>
-                <input
-                  type="text"
-                  name="email"
-                  onChange={handleInputChange}
-                  value={formData.email}
-                  placeholder="Email"
-                />
-              </div>
-              <div className="login-password">
-                <span>Password</span>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleInputChange}
-                  value={formData.password}
-                  placeholder="Password"
-                />
-              </div>
-              <button
-                type="submit"
-                className="login-button"
-                onClick={handleOnClickSignup}
-              >
-                SignUp
-              </button>
-              <a href="/login"> Already have an account? Login here </a>
-            </div>
-          </form>
-        </>
-      )}
-
-      <ErrorModal
-        isOpen={isErrorModalOpen}
-        onClose={handleCloseErrorModal}
-        error={error || "An error occured"}
-      />
-    </>
+    <div className="signup-container">
+      <h1 className="signup-title">Create Account</h1>
+      <form method="POST" className="signup-form">
+        {error && <p className="error-text">{error}</p>}
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            onChange={handleInputChange}
+            value={formData.email}
+            placeholder="Enter your email"
+            autoComplete="email"
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            onChange={handleInputChange}
+            value={formData.password}
+            placeholder="Choose a password"
+            autoComplete="new-password"
+          />
+        </div>
+        <button
+          type="submit"
+          className="signup-button"
+          onClick={handleSignup}
+        >
+          Create Account
+        </button>
+      </form>
+      <p className="login-prompt">
+        Already have an account?
+        <Link to="/login" className="login-link">
+          Sign in
+        </Link>
+      </p>
+    </div>
   );
 }
