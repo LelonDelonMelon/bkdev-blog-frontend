@@ -103,19 +103,16 @@ textarea.input-field {
 }
 
 .login-link {
-  margin-right: 2rem;
-  color: whitesmoke;
+  color: #fff;
+  text-decoration: none;
+  margin-left: 1rem;
+  transition: color 0.2s ease;
 }
-.signup-link {
-  color: whitesmoke;
-}
+
 .login-link:hover {
-  color: darkkhaki;
+  color: #ddd;
 }
 .bk:hover {
-  color: darkkhaki;
-}
-.signup-link:hover {
   color: darkkhaki;
 }
 .error-header {

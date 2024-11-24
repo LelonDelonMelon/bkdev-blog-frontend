@@ -6,8 +6,7 @@
   flex-wrap: wrap;
 }
 
-.login-link,
-.signup-link {
+.login-link {
   color: var(--text-color);
   font-size: 1rem;
   transition: color 0.3s ease;
@@ -16,7 +15,6 @@
 }
 
 .login-link:hover,
-.signup-link:hover,
 .bk:hover {
   color: var(--hover-color);
 }
@@ -54,7 +52,6 @@
   }
 
   .login-link,
-  .signup-link,
   .signed-in-user {
     font-size: 0.9rem;
     padding: 0.4rem;

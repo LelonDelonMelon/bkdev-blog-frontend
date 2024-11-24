@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
 export default function Login() {
@@ -50,8 +50,9 @@ export default function Login() {
         );
         setIsUserLoggedIn(true);
         navigate("/");
-      } else {
+      } else if (response.status === 401) {
         const errorMsg = await response.text();
+
         setError(errorMsg || "Invalid login credentials.");
         setIsUserLoggedIn(false);
       }
@@ -67,49 +68,41 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      <h1 className="welcome-back-text">Welcome Back</h1>
-      <form method="POST">
-        <div className="login-box">
-          {error && <p className="error-text">{error}</p>}
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              onChange={handleInputChange}
-              value={formData.email}
-              placeholder="Enter your email"
-              autoComplete="email"
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              onChange={handleInputChange}
-              value={formData.password}
-              placeholder="Enter your password"
-              autoComplete="current-password"
-            />
-          </div>
-          <button
-            type="submit"
-            className="login-button"
-            onClick={handleOnClickLogin}
-          >
-            Sign In
-          </button>
+      <h1 className="login-title">Welcome Back</h1>
+      <form method="POST" className="login-form">
+        {error && <p className="error-text">{error}</p>}
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            onChange={handleInputChange}
+            value={formData.email}
+            placeholder="Enter your email"
+            autoComplete="email"
+          />
         </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            onChange={handleInputChange}
+            value={formData.password}
+            placeholder="Enter your password"
+            autoComplete="current-password"
+          />
+        </div>
+        <button
+          type="submit"
+          className="login-button"
+          onClick={handleOnClickLogin}
+        >
+          Sign In
+        </button>
       </form>
-      <p className="signup-prompt">
-        Don't have an account?
-        <Link to="/signup" className="signup-link">
-          Sign up
-        </Link>
-      </p>
     </div>
   );
 }

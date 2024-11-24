@@ -35,7 +35,7 @@ export default function Signup() {
         const token = await response.text();
         localStorage.setItem("jwtToken", token);
         localStorage.setItem("isLoggedIn", "true");
-        
+
         // Fetch user data immediately after signup
         const userResponse = await fetch("http://localhost:3000/users/me", {
           method: "GET",
@@ -90,11 +90,7 @@ export default function Signup() {
             autoComplete="new-password"
           />
         </div>
-        <button
-          type="submit"
-          className="signup-button"
-          onClick={handleSignup}
-        >
+        <button type="submit" className="signup-button" onClick={handleSignup}>
           Create Account
         </button>
       </form>

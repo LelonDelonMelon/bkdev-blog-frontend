@@ -38,13 +38,15 @@ function App() {
             return response.json().then((data) => {
               localStorage.setItem("userData", JSON.stringify(data));
             });
-          } else {
-            // If the token is invalid, log the user out
-            handleLogout();
+          } else if (response.status === 401) {
+            // Only logout if the token is actually invalid
+            // handleLogout();
           }
+          // For other status codes, keep the user logged in
         })
-        .catch(() => {
-          handleLogout();
+        .catch((error) => {
+          // Don't logout on network errors, just log them
+          console.error("Error fetching user data:", error);
         });
     } else {
       setIsUserLoggedIn(false);
@@ -65,7 +67,7 @@ function App() {
   }, [isUserLoggedIn]);
 
   return (
-    <div className="container">
+    <div className="container" id="root">
       {!isUserLoggedIn ? (
         <a className="login-link" href="/login">
           Log in
@@ -79,23 +81,21 @@ function App() {
           />
         </div>
       )}
-      {localStorage.getItem("isLoggedIn") === "false" && (
-        <a className="signup-link" href="/signup">
-          Sign Up
-        </a>
-      )}
+
       <div className="hero">
         <h1 className="hero-title">bk</h1>
         <div className="hero-social-links">
           <a
-            href="https://github.com/burakkaraceylan"
+            href="https://github.com/LelonDelonMelon"
             className="hero-social-link"
+            target="_blank"
           >
             github
           </a>
           <a
-            href="https://www.linkedin.com/in/burak-karaceylan/"
+            href="https://www.linkedin.com/in/burakkati/"
             className="hero-social-link"
+            target="_blank"
           >
             linkedin
           </a>
@@ -107,13 +107,15 @@ function App() {
         <p>No posts available.</p>
       ) : (
         posts.map((post) => (
-          <Post
-            key={post.id}
-            postId={post.id}
-            postTitle={post.title}
-            postDetail={post.details}
-            postDate={post.date}
-          />
+          <div key={post.id}>
+            <Post
+              key={post.id}
+              postId={post.id}
+              postTitle={post.title}
+              postDetail={post.details}
+              postDate={post.date}
+            />
+          </div>
         ))
       )}
     </div>
