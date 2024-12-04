@@ -6,6 +6,7 @@ import AdminPanel from "./admin/index.tsx";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound.tsx";
 import Profile from "./components/Profile.tsx";
+import Signup from "./components/Signup.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +31,18 @@ const router = createBrowserRouter([
         <Profile />
       </ProtectedRoute>
     ),
+  },
+  {
+    path: "/profile",
+    element: (
+      <ProtectedRoute>
+        <Profile />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
   },
   {
     path: "*",

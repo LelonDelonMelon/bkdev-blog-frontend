@@ -9,6 +9,7 @@ import fetchPosts from "./util/fetchPosts";
 import PostData from "./types/Post";
 import { handleSignOut } from "../src/util/auth";
 import WelcomeModal from "./components/WelcomeModal";
+import { fetchWithTokenRefresh } from "./util/authUtils";
 
 function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
@@ -25,28 +26,35 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem("isLoggedIn") === "true") {
+      console.log("jwtToken", localStorage.getItem("jwtToken"));
       setIsUserLoggedIn(true);
-      fetch("http://localhost:3000/users/me", {
+
+      fetchWithTokenRefresh("http://localhost:3000/users/me", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
         },
       })
-        .then((response) => {
-          if (response.ok) {
-            return response.json().then((data) => {
-              localStorage.setItem("userData", JSON.stringify(data));
-            });
-          } else if (response.status === 401) {
-            // Only logout if the token is actually invalid
-            // handleLogout();
+        .then(async (response) => {
+          if (!response.ok) {
+            const err = await response.json();
+            if (err.code === "TOKEN_EXPIRED") {
+              handleLogout();
+              window.location.href = "/login";
+            }
+            throw err;
           }
-          // For other status codes, keep the user logged in
+          return response.json();
+        })
+        .then((data) => {
+          localStorage.setItem("userData", JSON.stringify(data));
         })
         .catch((error) => {
-          // Don't logout on network errors, just log them
           console.error("Error fetching user data:", error);
+          if (error.code === "TOKEN_EXPIRED") {
+            handleLogout();
+            window.location.href = "/login";
+          }
         });
     } else {
       setIsUserLoggedIn(false);
@@ -67,7 +75,7 @@ function App() {
   }, [isUserLoggedIn]);
 
   return (
-    <div className="container" id="root">
+    <div className="container" key={Date.now() + Math.random()}>
       {!isUserLoggedIn ? (
         <a className="login-link" href="/login">
           Log in
