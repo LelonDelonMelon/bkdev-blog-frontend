@@ -23,12 +23,13 @@ export default function Profile() {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem("jwtToken");
+        console.log("Token from localStorage:", token);
         if (!token) {
           navigate("/login");
           return;
         }
 
-        const response = await fetch("http://localhost:3000/users/me", {
+        const response = await fetch("http://localhost:3000/auth/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -38,6 +39,7 @@ export default function Profile() {
 
         if (response.ok) {
           const userData = await response.json();
+          console.log("userData from profile", userData);
           setFormData({
             id: userData.id,
             email: userData.email,

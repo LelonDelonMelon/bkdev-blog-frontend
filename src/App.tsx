@@ -28,38 +28,32 @@ function App() {
     if (localStorage.getItem("isLoggedIn") === "true") {
       console.log("jwtToken", localStorage.getItem("jwtToken"));
       setIsUserLoggedIn(true);
-
-      fetchWithTokenRefresh("http://localhost:3000/users/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            const err = await response.json();
-            if (err.code === "TOKEN_EXPIRED") {
-              handleLogout();
-              window.location.href = "/login";
-            }
-            throw err;
-          }
-          return response.json();
-        })
-        .then((data) => {
-          localStorage.setItem("userData", JSON.stringify(data));
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-          if (error.code === "TOKEN_EXPIRED") {
-            handleLogout();
-            window.location.href = "/login";
-          }
-        });
-    } else {
-      setIsUserLoggedIn(false);
     }
+    fetchWithTokenRefresh("http://localhost:3000/auth/me", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          const userData = await response.json();
+          console.log("userData", userData);
 
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          return userData;
+        } else {
+          throw new Error("Failed to fetch user data");
+        }
+      })
+      .then((data) => {
+        localStorage.setItem("userData", JSON.stringify(data));
+      })
+      .catch((error) => {
+        console.error("Error fetching user data:", error);
+      });
     const fetchData = async () => {
       try {
         const fetchedPosts = await fetchPosts();
@@ -75,7 +69,7 @@ function App() {
   }, [isUserLoggedIn]);
 
   return (
-    <div className="container" key={Date.now() + Math.random()}>
+    <div className="container">
       {!isUserLoggedIn ? (
         <a className="login-link" href="/login">
           Log in
