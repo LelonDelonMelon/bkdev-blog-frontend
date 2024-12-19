@@ -51,7 +51,7 @@ export default function Login() {
         setIsUserLoggedIn(true);
         navigate("/");
       } else if (response.status === 401) {
-        const errorMsg = await response.text();
+        const errorMsg = await response.statusText;
 
         setError(errorMsg || "Invalid login credentials.");
         setIsUserLoggedIn(false);

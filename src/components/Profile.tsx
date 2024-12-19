@@ -21,35 +21,43 @@ export default function Profile() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      try {
-        const token = localStorage.getItem("jwtToken");
-        console.log("Token from localStorage:", token);
-        if (!token) {
-          navigate("/login");
-          return;
-        }
+      const tokenData = localStorage.getItem("jwtToken");
+      console.log("Raw tokenData:", tokenData);
 
-        const response = await fetch("http://localhost:3000/auth/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      let token;
+      if (typeof tokenData === "string") {
+        try {
+          // Try parsing as JSON first
+          const parsedTokenData = JSON.parse(tokenData);
+          token = parsedTokenData.access_token;
+        } catch {
+          // If parsing fails, treat the entire string as the token
+          token = tokenData;
+        }
+      }
+
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+      const response = await fetch("http://localhost:3000/users/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("userData from profile", userData);
+        setFormData({
+          id: userData.id.toString(),
+          email: userData.email,
+          password: "",
         });
-
-        if (response.ok) {
-          const userData = await response.json();
-          console.log("userData from profile", userData);
-          setFormData({
-            id: userData.id,
-            email: userData.email,
-            password: "",
-          });
-        } else {
-          throw new Error("Failed to fetch user data");
-        }
-      } catch (err) {
-        setError("Failed to load profile data. Please try again later.");
+      } else {
+        throw new Error("Failed to fetch user data");
       }
     };
 
