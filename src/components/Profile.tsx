@@ -48,7 +48,7 @@ export default function Profile() {
         },
       });
 
-      if (response.ok) {
+      try {
         const userData = await response.json();
         console.log("userData from profile", userData);
         setFormData({
@@ -56,8 +56,8 @@ export default function Profile() {
           email: userData.email,
           password: "",
         });
-      } else {
-        throw new Error("Failed to fetch user data");
+      } catch (e: any) {
+        throw new Error(e?.message);
       }
     };
 
