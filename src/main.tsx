@@ -7,6 +7,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import NotFound from "./components/NotFound.tsx";
 import Profile from "./components/Profile.tsx";
 import Signup from "./components/Signup.tsx";
+import PostView from "./components/PostView.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <Signup />,
+  },
+  {
+    path: "/posts/:slug",
+    element: <PostView />,
   },
   {
     path: "*",

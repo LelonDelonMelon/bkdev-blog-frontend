@@ -4,6 +4,7 @@ import "../styles/Login.css";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
+    username: "",
     email: "",
     password: "",
   });
@@ -23,8 +24,9 @@ export default function Signup() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:3000/users/new", {
+      const response = await fetch("http://localhost:8080/api/auth/register", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -32,24 +34,9 @@ export default function Signup() {
       });
 
       if (response.ok) {
-        const token = await response.text();
-        localStorage.setItem("jwtToken", token);
+        const data = await response.json();
         localStorage.setItem("isLoggedIn", "true");
-
-        // Fetch user data immediately after signup
-        const userResponse = await fetch("http://localhost:3000/users/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (userResponse.ok) {
-          const userData = await userResponse.json();
-          localStorage.setItem("userData", JSON.stringify(userData));
-        }
-
+        localStorage.setItem("userData", JSON.stringify(data.user));
         navigate("/");
       } else {
         const errorData = await response.json();
@@ -66,6 +53,18 @@ export default function Signup() {
       <h1 className="signup-title">Create Account</h1>
       <form method="POST" className="signup-form">
         {error && <p className="error-text">{error}</p>}
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            onChange={handleInputChange}
+            value={formData.username}
+            placeholder="Enter your username"
+            autoComplete="username"
+          />
+        </div>
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input

@@ -8,6 +8,10 @@ interface UserDropdownProps {
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ email, onLogout }) => {
   const [isOpen, setIsOpen] = useState(false);
+  
+  // Get user data to check admin role
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const isAdmin = userData.role === "admin";
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -28,15 +32,19 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ email, onLogout }) => {
             return "User";
           }
         })()}
+        {isAdmin && <span className="admin-indicator">👑</span>}
         <span className={`arrow ${isOpen ? "up" : "down"}`}>▼</span>
       </button>
 
       {isOpen && (
         <div className="user-dropdown-menu">
-          <a href="/admin" className="dropdown-item">
-            <i className="fas fa-cog"></i>
-            Admin Panel
-          </a>
+          {isAdmin && (
+            <a href="/admin" className="dropdown-item admin-item">
+              <i className="fas fa-cog"></i>
+              Admin Panel
+              <span className="admin-badge">ADMIN</span>
+            </a>
+          )}
           <a href="/edit-profile" className="dropdown-item">
             <i className="fas fa-user-edit"></i>
             Edit Profile

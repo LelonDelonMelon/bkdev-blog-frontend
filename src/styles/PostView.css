@@ -1,0 +1,106 @@
+.post-view-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.post-nav {
+  margin-bottom: 30px;
+}
+
+.back-link {
+  color: #666;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #333;
+}
+
+.post-content {
+  background: white;
+  border-radius: 8px;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+.post-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 15px 0;
+  line-height: 1.2;
+}
+
+.post-meta {
+  display: flex;
+  gap: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+.post-date {
+  font-style: italic;
+}
+
+.post-author {
+  font-weight: 500;
+}
+
+.post-body {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+.post-body p {
+  margin-bottom: 20px;
+}
+
+.post-excerpt {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 6px;
+  border-left: 4px solid #007bff;
+  font-style: italic;
+  color: #666;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.error h2 {
+  color: #dc3545;
+  margin-bottom: 10px;
+}
+
+.error p {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .post-view-container {
+    padding: 15px;
+  }
+  
+  .post-content {
+    padding: 25px;
+  }
+  
+  .post-title {
+    font-size: 2rem;
+  }
+}

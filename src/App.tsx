@@ -7,52 +7,57 @@ import "./styles/Navigation.css";
 import Post from "./components/post";
 import fetchPosts from "./util/fetchPosts";
 import PostData from "./types/Post";
-import { handleSignOut } from "../src/util/auth";
 import WelcomeModal from "./components/WelcomeModal";
-import { fetchWithTokenRefresh } from "./util/authUtils";
 
 function App() {
   const [posts, setPosts] = useState<PostData[]>([]); // Initialize with an empty array
   const [loading, setLoading] = useState(true);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
-  const handleLogout = () => {
-    handleSignOut();
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:8080/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
     setIsUserLoggedIn(false);
     localStorage.setItem("isLoggedIn", "false");
-    localStorage.removeItem("jwtToken");
     localStorage.removeItem("userData");
   };
 
   useEffect(() => {
-    if (localStorage.getItem("isLoggedIn") === "true") {
-      console.log("jwtToken", localStorage.getItem("jwtToken"));
-      setIsUserLoggedIn(true);
-    }
-    fetchWithTokenRefresh("http://localhost:3000/auth/me", {
+    // Check if user is logged in by trying to fetch profile
+    fetch("http://localhost:8080/api/auth/profile", {
       method: "GET",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwtToken")}`,
       },
     })
       .then(async (response) => {
         if (response.ok) {
           const userData = await response.json();
           console.log("userData", userData);
-
           localStorage.setItem("userData", JSON.stringify(userData));
-
-          return userData;
+          localStorage.setItem("isLoggedIn", "true");
+          setIsUserLoggedIn(true);
         } else {
-          throw new Error("Failed to fetch user data");
+          localStorage.setItem("isLoggedIn", "false");
+          localStorage.removeItem("userData");
+          setIsUserLoggedIn(false);
         }
-      })
-      .then((data) => {
-        localStorage.setItem("userData", JSON.stringify(data));
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
+        localStorage.setItem("isLoggedIn", "false");
+        localStorage.removeItem("userData");
+        setIsUserLoggedIn(false);
       });
     const fetchData = async () => {
       try {
@@ -105,7 +110,7 @@ function App() {
       </div>
       {loading ? (
         <p>Loading...</p>
-      ) : posts.length === 0 ? (
+      ) : !posts || posts.length === 0 ? (
         <p>No posts available.</p>
       ) : (
         posts.map((post) => (
@@ -114,8 +119,9 @@ function App() {
               key={post.id}
               postId={post.id}
               postTitle={post.title}
-              postDetail={post.details}
-              postDate={post.date}
+              postDetail={post.content || post.details || ""}
+              postDate={post.created_at || post.date || ""}
+              postSlug={post.slug}
             />
           </div>
         ))

@@ -6,9 +6,9 @@ const AdminPanel: React.FC = () => {
   const [currentFile, setCurrentFile] = useState<File>();
   const [postDetails, setPostDetails] = useState<{
     title: string;
-    details: string;
-    date: string;
-  }>({ title: "", details: "", date: "" });
+    content: string;
+    published: boolean;
+  }>({ title: "", content: "", published: true });
 
   const selectFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = event.target;
@@ -30,15 +30,14 @@ const AdminPanel: React.FC = () => {
 
   const submitOnClick = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    const token = localStorage.getItem("jwtToken");
 
-    if (localStorage.getItem("isLoggedIn") === "true" && token) {
+    if (localStorage.getItem("isLoggedIn") === "true") {
       try {
-        const response = await fetch("http://localhost:3000/post/new", {
+        const response = await fetch("http://localhost:8080/api/posts", {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(postDetails),
         });
@@ -80,22 +79,24 @@ const AdminPanel: React.FC = () => {
                 <span className="info">Post Content</span>
                 <textarea
                   onChange={setTextArea}
-                  name="details"
+                  name="content"
                   placeholder="Write your post content here..."
                   className="input-field"
-                  value={postDetails.details}
+                  value={postDetails.content}
                 />
               </div>
 
               <div>
-                <span className="info">Publication Date</span>
-                <input
-                  type="date"
-                  className="input-field"
-                  name="date"
-                  onChange={setPostOnChange}
-                  value={postDetails.date}
-                />
+                <span className="info">Publish Status</span>
+                <label className="checkbox-label">
+                  <input
+                    type="checkbox"
+                    name="published"
+                    checked={postDetails.published}
+                    onChange={(e) => setPostDetails({...postDetails, published: e.target.checked})}
+                  />
+                  Publish immediately
+                </label>
               </div>
 
               {isFileUploadOpen && (

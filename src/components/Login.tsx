@@ -32,8 +32,9 @@ export default function Login() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -41,12 +42,11 @@ export default function Login() {
       });
 
       if (response.ok) {
-        const token = await response.text();
-        localStorage.setItem("jwtToken", token);
+        const data = await response.json();
         localStorage.setItem("isLoggedIn", "true");
         localStorage.setItem(
           "userData",
-          JSON.stringify({ email: formData.email })
+          JSON.stringify(data.user)
         );
         setIsUserLoggedIn(true);
         navigate("/");

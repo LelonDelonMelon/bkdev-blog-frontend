@@ -3,7 +3,7 @@ import PostData from "../types/Post";
 
 const fetchPosts = async (): Promise<PostData[]> => {
   try {
-    const response = await axios.get("http://localhost:3000/post");
+    const response = await axios.get("http://localhost:8080/api/posts");
     // console.log("Res", response);
     const posts = response.data as PostData[];
     return posts;
